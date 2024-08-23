@@ -37,6 +37,7 @@ spec:
             claimName: postgres-volume-claim
 
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,7 +59,7 @@ spec:
               memory: "64Mi"
               cpu: "250m"
             limits:
-              memory: "128Mi"
+              memory: "256Mi"  
               cpu: "500m"
           ports:
             - containerPort: 8080
