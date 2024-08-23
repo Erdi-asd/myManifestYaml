@@ -30,9 +30,38 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgresdata
+
       volumes:
         - name: postgresdata
           persistentVolumeClaim:
             claimName: postgres-volume-claim
 
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bekiratech
+spec:
+  selector:
+    matchLabels:
+      app: bekiratech
+  template:
+    metadata:
+      labels:
+        app: bekiratech
+    spec:
+      containers: 
+        - name: bekiratech
+          image: erdidocky/bekiratech:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: bekiratech-secret 
