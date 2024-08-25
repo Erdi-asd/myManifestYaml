@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bekiratech
+spec:
+  selector:
+    matchLabels:
+      app: bekiratech
+  template:
+    metadata:
+      labels:
+        app: bekiratech
+    spec:
+      containers: 
+        - name: bekiratech
+          image: erdidocky/bekiratech:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"  
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: bekiratech-secret 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: bekiratech-service
+  labels:
+    app: bekiratech
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 8080  
+    targetPort: 8080  
+  selector:
+    app: bekiratech
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bekiratech-secret
+  labels:
+    app: bekiratech
+data:
+  DATASOURCE_USER: user
+  DATASOURCE_PASSWORD: ciao123
+  DATASOURCE_URL: postgresql://postgres-service:5432/kiratech
